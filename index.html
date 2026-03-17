@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ヒットアンドブロー 対戦</title>
+
+<style>
+
+body{
+font-family:sans-serif;
+text-align:center;
+background:#f4f6fb;
+}
+
+h1{
+margin-top:20px;
+}
+
+#palette{
+margin:20px;
+}
+
+.colorBtn{
+width:40px;
+height:40px;
+border-radius:50%;
+border:none;
+margin:5px;
+cursor:pointer;
+}
+
+#slots{
+display:flex;
+justify-content:center;
+margin:10px;
+}
+
+.slot{
+width:40px;
+height:40px;
+border-radius:50%;
+border:2px solid #aaa;
+margin:5px;
+}
+
+button{
+padding:6px 12px;
+margin:5px;
+}
+
+#log{
+width:360px;
+margin:auto;
+margin-top:20px;
+text-align:left;
+}
+
+.row{
+display:flex;
+align-items:center;
+margin-bottom:5px;
+}
+
+.small{
+width:18px;
+height:18px;
+border-radius:50%;
+margin-right:3px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>ヒットアンドブロー</h1>
+<h3 id="turn">プレイヤー1の番</h3>
+
+<div id="palette"></div>
+
+<div id="slots">
+<div class="slot"></div>
+<div class="slot"></div>
+<div class="slot"></div>
+<div class="slot"></div>
+</div>
+
+<button onclick="submitGuess()">決定</button>
+<button onclick="resetGuess()">リセット</button>
+
+<h3 id="message"></h3>
+
+<div id="log"></div>
+
+<script>
+
+const colors=["red","blue","green","yellow","purple","orange"];
+
+let answer=[];
+let guess=[];
+let player=1;
+let turn=0;
+
+function createAnswer(){
+
+for(let i=0;i<4;i++){
+
+let c=colors[Math.floor(Math.random()*colors.length)];
+answer.push(c);
+
+}
+
+}
+
+function createPalette(){
+
+const palette=document.getElementById("palette");
+
+colors.forEach(c=>{
+
+let btn=document.createElement("button");
+
+btn.className="colorBtn";
+btn.style.background=c;
+
+btn.onclick=()=>{
+
+if(guess.length<4){
+
+guess.push(c);
+updateSlots();
+
+}
+
+};
+
+palette.appendChild(btn);
+
+});
+
+}
+
+function updateSlots(){
+
+const slots=document.querySelectorAll(".slot");
+
+slots.forEach((s,i)=>{
+
+s.style.background=guess[i]||"white";
+
+});
+
+}
+
+function resetGuess(){
+
+guess=[];
+updateSlots();
+
+}
+
+function submitGuess(){
+
+if(guess.length!==4){
+
+alert("4色選んでください");
+return;
+
+}
+
+turn++;
+
+let hit=0;
+let blow=0;
+
+let answerCopy=[...answer];
+let guessCopy=[...guess];
+
+for(let i=0;i<4;i++){
+
+if(guessCopy[i]===answerCopy[i]){
+
+hit++;
+answerCopy[i]=null;
+guessCopy[i]=null;
+
+}
+
+}
+
+for(let i=0;i<4;i++){
+
+if(guessCopy[i]){
+
+let index=answerCopy.indexOf(guessCopy[i]);
+
+if(index!==-1){
+
+blow++;
+answerCopy[index]=null;
+
+}
+
+}
+
+}
+
+addLog(hit,blow);
+
+if(hit===4){
+
+document.getElementById("message").textContent=
+"プレイヤー"+player+"の勝ち！ ("+turn+"手目)";
+document.getElementById("turn").textContent="ゲーム終了";
+
+return;
+
+}
+
+player = player===1 ? 2 : 1;
+
+document.getElementById("turn").textContent="プレイヤー"+player+"の番";
+
+guess=[];
+updateSlots();
+
+}
+
+function addLog(hit,blow){
+
+const log=document.getElementById("log");
+
+const row=document.createElement("div");
+
+row.className="row";
+
+const playerText=document.createElement("span");
+
+playerText.textContent="P"+player+" ";
+
+row.appendChild(playerText);
+
+guess.forEach(c=>{
+
+const d=document.createElement("div");
+
+d.className="small";
+d.style.background=c;
+
+row.appendChild(d);
+
+});
+
+const text=document.createElement("span");
+
+text.textContent=" → "+hit+" HIT / "+blow+" BLOW";
+
+row.appendChild(text);
+
+log.prepend(row);
+
+}
+
+createAnswer();
+createPalette();
+updateSlots();
+
+</script>
+
+</body>
+</html>
