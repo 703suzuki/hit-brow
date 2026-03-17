@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>hit&blow</title>
+<title>Hit & Blow</title>
 
 <style>
 
@@ -88,9 +88,11 @@ margin:5px;
 
 <body>
 
-<h1>hit&blow</h1>
+<h1>Hit & Blow</h1>
 
-<h3 id="turn">player 1</h3>
+<h3 id="turn">Player 1 Turn</h3>
+
+<button onclick="showRules()">Rules</button>
 
 <div id="palette"></div>
 
@@ -101,9 +103,9 @@ margin:5px;
 <div class="slot"></div>
 </div>
 
-<button onclick="submitGuess()">決定</button>
-<button onclick="resetGuess()">リセット</button>
-<button onclick="restartGame()">新しいゲーム</button>
+<button onclick="submitGuess()">Submit</button>
+<button onclick="resetGuess()">Reset</button>
+<button onclick="restartGame()">New Game</button>
 
 <h3 id="result"></h3>
 
@@ -116,7 +118,19 @@ const colors=["red","blue","green","yellow","purple","orange"];
 let answer=[];
 let guess=[];
 let player=1;
-let turn=1;
+
+function showRules(){
+
+alert(
+"Rules:\n\n"+
+"1. The game chooses 4 colors randomly.\n"+
+"2. Players take turns guessing the colors.\n"+
+"3. HIT = correct color and position.\n"+
+"4. BLOW = correct color but wrong position.\n"+
+"5. The player who gets 4 HIT wins."
+);
+
+}
 
 function createAnswer(){
 
@@ -182,7 +196,7 @@ function submitGuess(){
 
 if(guess.length!==4){
 
-alert("4色選んでください");
+alert("Select 4 colors");
 return;
 
 }
@@ -227,9 +241,9 @@ addRow(hit,blow);
 if(hit===4){
 
 document.getElementById("result").textContent=
-"🏆 player"+player+"の勝ち！";
+"🏆 Player "+player+" Wins!";
 
-document.getElementById("turn").textContent="ゲーム終了";
+document.getElementById("turn").textContent="Game Over";
 
 return;
 
@@ -237,12 +251,10 @@ return;
 
 player = player===1 ? 2 : 1;
 
-document.getElementById("turn").textContent="プレイヤー"+player+"の番";
+document.getElementById("turn").textContent="Player "+player+" Turn";
 
 guess=[];
 updateSlots();
-
-turn++;
 
 }
 
@@ -256,7 +268,7 @@ row.className="row";
 
 const playerText=document.createElement("div");
 
-playerText.textContent="P"+player+" ";
+playerText.textContent="P"+player;
 
 row.appendChild(playerText);
 
@@ -294,11 +306,10 @@ function restartGame(){
 createAnswer();
 guess=[];
 player=1;
-turn=1;
 
 document.getElementById("board").innerHTML="";
 document.getElementById("result").textContent="";
-document.getElementById("turn").textContent="プレイヤー1の番";
+document.getElementById("turn").textContent="Player 1 Turn";
 
 updateSlots();
 
