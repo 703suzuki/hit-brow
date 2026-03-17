@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="UTF-8">
 <title>Hit & Blow</title>
@@ -90,9 +90,9 @@ margin:5px;
 
 <h1>Hit & Blow</h1>
 
-<h3 id="turn">Player 1 Turn</h3>
+<h3 id="turn">Player 1 の番</h3>
 
-<button onclick="showRules()">Rules</button>
+<button onclick="showRules()">ルール</button>
 
 <div id="palette"></div>
 
@@ -103,9 +103,9 @@ margin:5px;
 <div class="slot"></div>
 </div>
 
-<button onclick="submitGuess()">Submit</button>
-<button onclick="resetGuess()">Reset</button>
-<button onclick="restartGame()">New Game</button>
+<button onclick="submitGuess()">決定</button>
+<button onclick="resetGuess()">リセット</button>
+<button onclick="restartGame()">新しいゲーム</button>
 
 <h3 id="result"></h3>
 
@@ -122,12 +122,12 @@ let player=1;
 function showRules(){
 
 alert(
-"Rules:\n\n"+
-"1. The game chooses 4 colors randomly.\n"+
-"2. Players take turns guessing the colors.\n"+
-"3. HIT = correct color and position.\n"+
-"4. BLOW = correct color but wrong position.\n"+
-"5. The player who gets 4 HIT wins."
+"【ルール】\n\n"+
+"・6色の中からランダムに4色が選ばれます。\n"+
+"・Player 1 と Player 2 が交互に予想します。\n"+
+"・HIT：色も位置も正しい\n"+
+"・BLOW：色は正しいが位置が違う\n"+
+"・先に4 HITを出したプレイヤーの勝ちです。"
 );
 
 }
@@ -196,7 +196,7 @@ function submitGuess(){
 
 if(guess.length!==4){
 
-alert("Select 4 colors");
+alert("4色選んでください");
 return;
 
 }
@@ -241,9 +241,9 @@ addRow(hit,blow);
 if(hit===4){
 
 document.getElementById("result").textContent=
-"🏆 Player "+player+" Wins!";
+"🏆 Player "+player+" の勝ち！";
 
-document.getElementById("turn").textContent="Game Over";
+document.getElementById("turn").textContent="ゲーム終了";
 
 return;
 
@@ -251,7 +251,7 @@ return;
 
 player = player===1 ? 2 : 1;
 
-document.getElementById("turn").textContent="Player "+player+" Turn";
+document.getElementById("turn").textContent="Player "+player+" の番";
 
 guess=[];
 updateSlots();
@@ -309,7 +309,7 @@ player=1;
 
 document.getElementById("board").innerHTML="";
 document.getElementById("result").textContent="";
-document.getElementById("turn").textContent="Player 1 Turn";
+document.getElementById("turn").textContent="Player 1 の番";
 
 updateSlots();
 
