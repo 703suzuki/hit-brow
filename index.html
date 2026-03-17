@@ -2,14 +2,14 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>ヒットアンドブロー 対戦</title>
+<title>ヒットアンドブロー対戦</title>
 
 <style>
 
 body{
 font-family:sans-serif;
 text-align:center;
-background:#f4f6fb;
+background:#e9ecff;
 }
 
 h1{
@@ -25,47 +25,62 @@ width:40px;
 height:40px;
 border-radius:50%;
 border:none;
-margin:5px;
+margin:6px;
 cursor:pointer;
+box-shadow:0 2px 4px rgba(0,0,0,0.2);
 }
 
 #slots{
 display:flex;
 justify-content:center;
-margin:10px;
+margin:15px;
 }
 
 .slot{
-width:40px;
-height:40px;
+width:45px;
+height:45px;
 border-radius:50%;
-border:2px solid #aaa;
-margin:5px;
+border:3px solid #aaa;
+margin:6px;
+background:white;
 }
 
-button{
-padding:6px 12px;
-margin:5px;
-}
-
-#log{
-width:360px;
-margin:auto;
+#board{
 margin-top:20px;
-text-align:left;
+width:420px;
+margin-left:auto;
+margin-right:auto;
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.15);
 }
 
 .row{
 display:flex;
 align-items:center;
-margin-bottom:5px;
+justify-content:space-between;
+margin-bottom:8px;
+}
+
+.guess{
+display:flex;
 }
 
 .small{
 width:18px;
 height:18px;
 border-radius:50%;
-margin-right:3px;
+margin-right:4px;
+}
+
+.hint{
+font-size:14px;
+}
+
+button{
+padding:7px 14px;
+margin:5px;
 }
 
 </style>
@@ -74,6 +89,7 @@ margin-right:3px;
 <body>
 
 <h1>ヒットアンドブロー</h1>
+
 <h3 id="turn">プレイヤー1の番</h3>
 
 <div id="palette"></div>
@@ -87,10 +103,11 @@ margin-right:3px;
 
 <button onclick="submitGuess()">決定</button>
 <button onclick="resetGuess()">リセット</button>
+<button onclick="restartGame()">新しいゲーム</button>
 
-<h3 id="message"></h3>
+<h3 id="result"></h3>
 
-<div id="log"></div>
+<div id="board"></div>
 
 <script>
 
@@ -99,9 +116,11 @@ const colors=["red","blue","green","yellow","purple","orange"];
 let answer=[];
 let guess=[];
 let player=1;
-let turn=0;
+let turn=1;
 
 function createAnswer(){
+
+answer=[];
 
 for(let i=0;i<4;i++){
 
@@ -168,8 +187,6 @@ return;
 
 }
 
-turn++;
-
 let hit=0;
 let blow=0;
 
@@ -205,12 +222,13 @@ answerCopy[index]=null;
 
 }
 
-addLog(hit,blow);
+addRow(hit,blow);
 
 if(hit===4){
 
-document.getElementById("message").textContent=
-"プレイヤー"+player+"の勝ち！ ("+turn+"手目)";
+document.getElementById("result").textContent=
+"🏆 プレイヤー"+player+"の勝ち！";
+
 document.getElementById("turn").textContent="ゲーム終了";
 
 return;
@@ -224,45 +242,70 @@ document.getElementById("turn").textContent="プレイヤー"+player+"の番";
 guess=[];
 updateSlots();
 
+turn++;
+
 }
 
-function addLog(hit,blow){
+function addRow(hit,blow){
 
-const log=document.getElementById("log");
+const board=document.getElementById("board");
 
 const row=document.createElement("div");
 
 row.className="row";
 
-const playerText=document.createElement("span");
+const playerText=document.createElement("div");
 
 playerText.textContent="P"+player+" ";
 
 row.appendChild(playerText);
 
+const guessDiv=document.createElement("div");
+
+guessDiv.className="guess";
+
 guess.forEach(c=>{
 
-const d=document.createElement("div");
+let d=document.createElement("div");
 
 d.className="small";
 d.style.background=c;
 
-row.appendChild(d);
+guessDiv.appendChild(d);
 
 });
 
-const text=document.createElement("span");
+row.appendChild(guessDiv);
 
-text.textContent=" → "+hit+" HIT / "+blow+" BLOW";
+const hint=document.createElement("div");
 
-row.appendChild(text);
+hint.className="hint";
 
-log.prepend(row);
+hint.textContent=hit+" HIT / "+blow+" BLOW";
+
+row.appendChild(hint);
+
+board.prepend(row);
 
 }
 
+function restartGame(){
+
 createAnswer();
+guess=[];
+player=1;
+turn=1;
+
+document.getElementById("board").innerHTML="";
+document.getElementById("result").textContent="";
+document.getElementById("turn").textContent="プレイヤー1の番";
+
+updateSlots();
+
+}
+
 createPalette();
+createAnswer();
 updateSlots();
 
 </script>
